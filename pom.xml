@@ -20,7 +20,7 @@
     </properties>
 
     <dependencies>
-        <!-- Here are all your dependencies. Currently only one. These are automatically downloaded from https://mvnrepository.com/ -->
+        <!-- comment Here are all your dependencies. Currently only one. These are automatically downloaded from https://mvnrepository.com/ -->
         <dependency>
             <groupId>com.github.javaparser</groupId>
             <artifactId>javaparser-core</artifactId>
