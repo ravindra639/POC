@@ -1,0 +1,21 @@
+pipeline {
+environment {
+SONAR_URL=""
+TFS_BRANCH="master"
+  }
+    agent { label 'slave1' }
+    stages {
+        stage ('BUILD') {
+		steps {
+				checkout([$class: 'GitSCM', branches: [[name: "*/${TFS_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
+				bat ' mvn clean'
+			}
+		}
+        stage ('DEPLOY') {
+		steps {
+				checkout([$class: 'GitSCM', branches: [[name: "*/${TFS_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
+				bat ' mvn compile'
+			}
+		}
+	}   
+}
