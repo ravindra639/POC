@@ -1,21 +1,66 @@
 pipeline {
-environment {
-SONAR_URL=""
-TFS_BRANCH="master"
+  environment {
+      TFS_BRANCH = "master"
   }
-    agent { label 'slave1' }
-    stages {
-        stage ('BUILD') {
-		steps {
-				checkout([$class: 'GitSCM', branches: [[name: "*/${TFS_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
-				bat ' mvn clean'
-			}
-		}
-        stage ('DEPLOY') {
-		steps {
-				checkout([$class: 'GitSCM', branches: [[name: "*/${TFS_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
-				bat ' mvn compile'
-			}
-		}
-	}   
+  parameters {
+    string(name: 'BUILD_NUM', defaultValue: '', description: '')
+    string(name: 'BUILD_NAME', defaultValue: '', description: '')
+    booleanParam(defaultValue: true, description: '', name: 'BUILD')
+    booleanParam(defaultValue: true, description: '', name: 'DEPLOY')
+    booleanParam(defaultValue: true, description: '', name: 'FULLTEST')
+    booleanParam(defaultValue: true, description: '', name: 'PERFORMTEST')
+    booleanParam(defaultValue: true, description: '', name: 'SECURITYTEST')
+  }
+  agent {label '!master'}
+  stages {
+    stage('BUILD') {
+        agent { label 'slave1' }
+		when {
+                expression { params.BUILD == true }
+             }
+      steps {
+        script {
+            currentBuild.displayName = "${BUILD_NUM}"
+            currentBuild.description = ""
+        }
+        bat 'echo BUILD STAGE'
+      }
+    }
+    stage('DEPLOY') {
+		when {
+                expression { params.DEPLOY == true }
+             }
+    steps {
+          bat 'echo DEPLOY STAGE'
+      }
+    }
+    stage ('FULLTEST') {
+			when {
+                expression { params.FULLTEST == true }
+             }
+            steps {                
+                script{
+                    currentBuild.displayName = "${BUILD_NUM}"
+                    currentBuild.description = ""
+                    bat 'echo FULL STAGE'
+                }                                              
+            }
+        }
+	stage ('PERFORMTEST') {
+			when {
+                expression { params.PERFORMTEST == true }
+             }
+            steps {
+                  bat 'echo PERFORM STAGE'
+      }
+        }
+	stage ('SECURITYTEST') {
+			when {
+                expression { params.SECURITYTEST == true }
+             }
+            steps {
+                     bat 'echo SECURITY STAGE'
+      }
+        }
+  }
 }
