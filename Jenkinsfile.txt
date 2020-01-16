@@ -11,7 +11,7 @@ pipeline {
     booleanParam(defaultValue: true, description: '', name: 'PERFORMTEST')
     booleanParam(defaultValue: true, description: '', name: 'SECURITYTEST')
   }
-  agent {label '!master'}
+  agent {label 'slave1'}
   stages {
     stage('BUILD') {
 		when {
@@ -22,6 +22,7 @@ pipeline {
             currentBuild.displayName = "${BUILD_NUM}"
             currentBuild.description = ""
         }
+	bat 'sleep 2m'
         bat 'echo BUILD STAGE'
       }
     }
