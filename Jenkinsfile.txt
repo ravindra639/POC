@@ -12,9 +12,9 @@ pipeline {
     booleanParam(defaultValue: true, description: '', name: 'SECURITYTEST')
   }
   agent {label '!master'}
+  agent { label 'slave1' }
   stages {
     stage('BUILD') {
-        agent { label 'slave1' }
 		when {
                 expression { params.BUILD == true }
              }
