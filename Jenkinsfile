@@ -10,9 +10,7 @@ pipeline {
   stages {
     stage('Deploy to QA') {
 	        agent { label 'slave1' }
-	        when {
-                branch "Develop"
-            }
+	        if env.BRANCH_NAME == "Develop"
             steps {
 	            checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
 				bat ' mvn clean'
@@ -20,9 +18,7 @@ pipeline {
     }
 	stage("Deploy to Production") {
             agent { label 'slave1' }
-            when {
-                branch "master"
-            }
+            if env.BRANCH_NAME == "master"
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
 				bat ' mvn clean'
