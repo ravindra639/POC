@@ -11,7 +11,7 @@ pipeline {
     stage('Deploy to QA') {
 	        agent { label 'slave1' }
 	        when {
-                expression { env.BRANCH_NAME == "Develop" }
+                expression { env.GIT_BRANCH == "Develop" }
             }
             steps {
 	            checkout([$class: 'GitSCM', branches: [[name: "*/${TFS_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
@@ -21,7 +21,7 @@ pipeline {
 	stage("Deploy to Production") {
             agent { label 'slave1' }
             when {
-                expression { env.BRANCH_NAME == "master" }
+                expression { env.GIT_BRANCH == "master" }
             }
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: "*/${TFS_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
