@@ -1,6 +1,6 @@
 pipeline {
   environment {
-	  branch = "master"
+	  GIT_BRANCH = "master"
   }
   options {
         disableConcurrentBuilds()
@@ -10,19 +10,21 @@ pipeline {
   stages {
     stage('Deploy to QA') {
 	        agent { label 'slave1' }
-	        if env.BRANCH_NAME == "Develop"
+	    if (env.BRANCH_NAME == "Develop"){
             steps {
-	            checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
+	            checkout([$class: 'GitSCM', branches: [[name: "*/${GIT_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
 				bat ' mvn clean'
             }
+	    }
     }
 	stage("Deploy to Production") {
             agent { label 'slave1' }
-            if env.BRANCH_NAME == "master"
+		if (env.BRANCH_NAME == "master"){
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
+                checkout([$class: 'GitSCM', branches: [[name: "*/${GIT_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'TF_CRED', url: 'https://github.com/ravindra639/POC']]])			
 				bat ' mvn clean'
             }
+		}
   }
 }
 }
