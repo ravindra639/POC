@@ -12,3 +12,8 @@ jobs:
           node -v
           npm -v
           echo "Printing both node and npm"
+      - name: Python command
+        run: |
+          import platform
+          print(platform.processor())
+        shell: python
