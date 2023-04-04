@@ -1,6 +1,10 @@
 name: Actions Workflow1
-on: [push, pull_request]
-
+on: 
+  schedule:
+    - cron: "0/5 * * * *"
+    - cron: "0/6 * * * *"    
+  pull_request:
+    types: [closed, assigned, opened, reopened]
 jobs:
   run-github-actions:
     runs-on: ubuntu-latest
@@ -19,6 +23,7 @@ jobs:
         run: |
           pwd
           ls -a
+          ls
       - name: simple JS function
         id: greet
         uses: actions/hello-world-javascript-action@v1
