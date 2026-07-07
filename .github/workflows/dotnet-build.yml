@@ -20,8 +20,8 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
-      - name: Restore
-        run: dotnet restore
+      # - name: Restore
+      #   run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
